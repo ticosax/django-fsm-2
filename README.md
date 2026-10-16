@@ -635,7 +635,8 @@ INSTALLED_APPS = (
 ## Transition tracking
 
 Use `@django_fsm.track()` to write state changes to a log table.
-By default, it writes to `django_fsm.StateLog` (single table).
+By default, it writes to `django_fsm.log.StateLog` (single table)
+if activated with the setting `DJANGO_FSM_USE_LEGACY_STATE_LOG_MODEL`.
 If you prefer one table per model, define your own log model and pass it in.
 You can also capture `author` and `description` for each transition.
 
@@ -666,6 +667,17 @@ class BlogPostLog(django_fsm.TransitionLogBase):
 class BlogPost(models.Model):
     state = django_fsm.FSMField(default="new")
 ```
+
+## Transition from django_fsm_log
+
+If your project depends on django_fsm_log and you desire to keep the data,
+this library provides a migration transferring ownership of the table from
+`django_fsm_log.models.StateLog` to `django_fsm.models.StateLog` if you 
+set the settings `DJANGO_FSM_USE_LEGACY_STATE_LOG_MODEL` to True.
+
+`django_fsm.models.StateLog` provides a 1:1 mapping of django_fsm_log's model.
+
+
 
 ## Drawing transitions
 
