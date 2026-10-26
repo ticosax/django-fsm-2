@@ -675,7 +675,8 @@ this library provides a migration transferring ownership of the table from
 `django_fsm_log.models.StateLog` to `django_fsm.models.StateLog` if you 
 set the settings `DJANGO_FSM_USE_LEGACY_STATE_LOG_MODEL` to True.
 
-`django_fsm.models.StateLog` provides a 1:1 mapping of django_fsm_log's model.
+`django_fsm.models.StateLog` provides a 1:1 mapping of django_fsm_log's model. With the addition of a new field
+state_field (to disambiguate models with multiple state machines).
 
 
 

@@ -20,7 +20,7 @@ class TransitionLogBase(models.Model):
     )
     state_field = models.CharField(max_length=255)
     source_state = models.CharField(max_length=255, null=True, blank=True, default=None)  # noqa: DJ001
-    state = models.CharField("Target state", max_length=255)
+    state = models.CharField("Target state", max_length=255, db_index=True)
     transition = models.CharField(max_length=255)
 
     description = models.TextField(null=True, blank=True)  # noqa: DJ001
@@ -40,13 +40,13 @@ class StateLogQuerySet(models.QuerySet["StateLog"]):
 
 class StateLog(TransitionLogBase):  # noqa: DJ008
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.TextField()
+    object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey("content_type", "object_id")
+    state_field = models.CharField(max_length=256, null=True, default=None)
 
     objects = StateLogQuerySet.as_manager()
 
-    class Meta:
-        db_table = "django_fsm_log_statelog"
+    class Meta(TransitionLogBase.Meta):
         indexes = [
             models.Index(fields=["source_state", "state"]),
             models.Index(fields=["content_type", "object_id"]),
